@@ -1,0 +1,32 @@
+Copyright (c) 2023 idnovate.com
+idnovate is a Registered Trademark & Property of idnovate.com, innovación y desarrollo SCP
+
+This source file is the exclusive property of the copyright holder
+and is protected by copyright laws and international treaty provisions.
+
+You may not resell, distribute, or transfer this source file to any third party
+without the prior written consent of the copyright holder.
+
+This source file may not be reverse-engineered, decompiled, disassembled, or modified in any way.
+
+This license is effective until terminated. The license will terminate automatically
+without notice from the copyright holder if you fail to comply with any provision of this license.
+
+Upon termination of this license, you must immediately cease all use of this source file
+and destroy all copies of this source file in your possession.
+
+This license constitutes the entire agreement between you and the copyright holder
+and supersedes all prior agreements, whether written or oral, relating to this source file.
+
+This license shall be governed by and construed in accordance with the laws of the country
+in which the copyright holder resides, without giving effect to any principles of conflicts of law.
+
+Any disputes arising under or in connection with this license shall be resolved in the courts of the country in which the copyright holder resides.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
