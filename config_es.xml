@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+    <name>advancedreports</name>
+    <displayName><![CDATA[Informes avanzados]]></displayName>
+    <version><![CDATA[1.4.9]]></version>
+    <description><![CDATA[Crea informes avanzados personalizados. Mediante una selecci&oacute;n visual de los campos o mediante consulta SQL directa. Crea tantos informes como necesites. Programa y env&iacute;a el informe por email.]]></description>
+    <author><![CDATA[idnovate]]></author>
+    <tab><![CDATA[administration]]></tab>
+	<confirmUninstall><![CDATA[Are you sure you want to uninstall the module and delete the related information?]]></confirmUninstall>
+    <is_configurable>1</is_configurable>
+    <need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+</module>

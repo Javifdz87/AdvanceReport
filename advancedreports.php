@@ -1,7 +1,7 @@
 <?php
 /**
  * Advanced Reports
- * 
+ *
  * ISC License
  *
  * Copyright (c) 2023 idnovate.com
@@ -65,6 +65,7 @@ class Advancedreports extends Module
 
     public function install()
     {
+
         $configTabName = $this->displayName.' - '.$this->l('Fields configuration');
         if (version_compare(_PS_VERSION_, '1.6', '<')) {
             $configTabName = substr($configTabName, 0, 32);
@@ -78,25 +79,33 @@ class Advancedreports extends Module
             $this->registerHook('actionAdminControllerSetMedia') &&
             (version_compare(_PS_VERSION_, '1.7', '<') ? $this->addTab($this->displayName, $this->tabClassName, -1) : $this->addTab($this->displayName, $this->tabClassName, 0)) &&
             (version_compare(_PS_VERSION_, '1.7', '<') ? $this->addTab($configTabName, $this->tabReportsFieldsClassName, -1) : $this->addTab($this->displayName.' - '.$this->l('Fields configuration'), $this->tabReportsFieldsClassName, 0));
-    }
+
+         }
 
     public function uninstall()
     {
+
         include(dirname(__FILE__).'/sql/uninstall.php');
         $this->removeTab($this->tabClassName);
         $this->removeTab($this->tabReportsFieldsClassName);
         return parent::uninstall();
+
     }
 
     public function getContent()
     {
+        if (Tools::isSubmit('submitUpdate')) {
+            $this->context->controller->errors[] = $this->l('El módulo no se puede actualizar.');
+            return;
+        }
+
         if (version_compare(_PS_VERSION_, '1.6', '<')) {
             Tools::redirectAdmin('index.php?tab='.$this->tabClassName.'&token='.Tools::getAdminTokenLite($this->tabClassName));
         } else {
             Tools::redirectAdmin('index.php?controller='.$this->tabClassName.'&token='.Tools::getAdminTokenLite($this->tabClassName));
         }
-        return false;
     }
+
 
     public function hookBackOfficeHeader()
     {

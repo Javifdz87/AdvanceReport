@@ -1,7 +1,7 @@
 <?php
 /**
  * Advanced Reports
- * 
+ *
  * ISC License
  *
  * Copyright (c) 2023 idnovate.com
@@ -34,6 +34,7 @@ class AdminAdvancedReportsConfController extends ModuleAdminController
 
     public function __construct($bypass = false)
     {
+
         $this->bootstrap = true;
         $this->module_name = 'advancedreports';
         $this->name = 'advancedreports';
@@ -57,7 +58,7 @@ class AdminAdvancedReportsConfController extends ModuleAdminController
 
         parent::__construct();
 
-        if (version_compare(_PS_VERSION_, '1.6.0.9', '<=')) {
+        if (version_compare(_PS_VERSION_, '1.4.5', '=')) {
             $this->meta_title = $this->l('Advanced reports configuration');
         } else {
             $this->meta_title[] = $this->l('Advanced reports configuration');
@@ -597,6 +598,7 @@ class AdminAdvancedReportsConfController extends ModuleAdminController
                 'categories' => $report->categories,
                 'manufacturers' => $report->manufacturers,
                 'suppliers' => $report->suppliers,
+                'body_email' => $report->body_email,
                 'profiles' => $report->profiles,
                 'date_from' => $report->date_from,
                 'date_to' => $report->date_to,
@@ -640,6 +642,7 @@ class AdminAdvancedReportsConfController extends ModuleAdminController
                         'name' => 'name'
                     ),
                 ),
+
                 array(
                     'type' => 'text',
                     'label' => $this->l('Name'),
@@ -830,6 +833,7 @@ class AdminAdvancedReportsConfController extends ModuleAdminController
         $_POST['manufacturers'] = (is_array(Tools::getValue('manufacturers')) ? (in_array('all', Tools::getValue('manufacturers')) ? 'all' : implode(',', Tools::getValue('manufacturers'))) : (Tools::getValue('manufacturers') == '' ? 'all' : Tools::getValue('manufacturers')));
         $_POST['statuses'] = (is_array(Tools::getValue('statuses')) ? (in_array('all', Tools::getValue('statuses')) ? 'all' : implode(',', Tools::getValue('statuses'))) : (Tools::getValue('statuses') == '' ? 'all' : Tools::getValue('statuses')));
         $_POST['payments'] = (is_array(Tools::getValue('payments')) ? (in_array('all', Tools::getValue('payments')) ? 'all' : implode(',', Tools::getValue('payments'))) : (Tools::getValue('payments') == '' ? 'all' : Tools::getValue('payments')));
+        $_POST['body_email'] = (is_array(Tools::getValue('body_email')) ? (in_array('', Tools::getValue('body_email')) ? 'all' : implode(',', Tools::getValue('body_email'))) : (Tools::getValue('body_email') == '' ? '' : Tools::getValue('body_email')));
         $_POST['profiles'] = (is_array(Tools::getValue('profiles')) ? (in_array('all', Tools::getValue('profiles')) ? 'all' : implode(',', Tools::getValue('profiles'))) : (Tools::getValue('profiles') == '' ? 'all' : Tools::getValue('profiles')));
         $_POST['data_from'] = (Tools::getValue('type') == '3' ? '99' : (Tools::getValue('data_from') == '' ? '98' : Tools::getValue('data_from')));
         $report = parent::processAdd();
@@ -854,6 +858,7 @@ class AdminAdvancedReportsConfController extends ModuleAdminController
             $_POST['manufacturers'] = (is_array(Tools::getValue('manufacturers')) ? (in_array('all', Tools::getValue('manufacturers')) ? 'all' : implode(',', Tools::getValue('manufacturers'))) : (Tools::getValue('manufacturers') == '' ? 'all' : Tools::getValue('manufacturers')));
             $_POST['statuses'] = (is_array(Tools::getValue('statuses')) ? (in_array('all', Tools::getValue('statuses')) ? 'all' : implode(',', Tools::getValue('statuses'))) : (Tools::getValue('statuses') == '' ? 'all' : Tools::getValue('statuses')));
             $_POST['payments'] = (is_array(Tools::getValue('payments')) ? (in_array('all', Tools::getValue('payments')) ? 'all' : implode(',', Tools::getValue('payments'))) : (Tools::getValue('payments') == '' ? 'all' : Tools::getValue('payments')));
+            $_POST['body_email'] = (is_array(Tools::getValue('body_email')) ? (in_array('', Tools::getValue('body_email')) ? '' : implode(',', Tools::getValue('body_email'))) : (Tools::getValue('body_email') == '' ? '' : Tools::getValue('body_email')));
             $_POST['profiles'] = (is_array(Tools::getValue('profiles')) ? (in_array('all', Tools::getValue('profiles')) ? 'all' : implode(',', Tools::getValue('profiles'))) : (Tools::getValue('profiles') == '' ? 'all' : Tools::getValue('profiles')));
             $_POST['data_from'] = (Tools::getValue('type') == '3' ? '99' : (Tools::getValue('data_from') == '' ? '98' : Tools::getValue('data_from')));
             return parent::processUpdate();
@@ -861,6 +866,7 @@ class AdminAdvancedReportsConfController extends ModuleAdminController
             $this->errors[] = Tools::displayError('An error occurred while loading the object.').'
                 <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
         }
+
     }
 
     public function postProcess()
@@ -897,17 +903,22 @@ class AdminAdvancedReportsConfController extends ModuleAdminController
                 $report->manufacturers = (is_array(Tools::getValue('manufacturers')) ? (in_array('all', Tools::getValue('manufacturers')) ? 'all' : implode(',', Tools::getValue('manufacturers'))) : (Tools::getValue('manufacturers') == '' ? 'all' : Tools::getValue('manufacturers')));
                 $report->statuses = (is_array(Tools::getValue('statuses')) ? (in_array('all', Tools::getValue('statuses')) ? 'all' : implode(',', Tools::getValue('statuses'))) : (Tools::getValue('statuses') == '' ? 'all' : Tools::getValue('statuses')));
                 $report->payments = (is_array(Tools::getValue('payments')) ? (in_array('all', Tools::getValue('payments')) ? 'all' : implode(',', Tools::getValue('payments'))) : (Tools::getValue('payments') == '' ? 'all' : Tools::getValue('payments')));
+                $report->body_email = (is_array(Tools::getValue('body_email')) ? (in_array('all', Tools::getValue('body_email')) ? 'all' : implode(',', Tools::getValue('body_email'))) : (Tools::getValue('body_email') == '' ? 'all' : Tools::getValue('body_email')));
                 $report->profiles = (is_array(Tools::getValue('profiles')) ? (in_array('all', Tools::getValue('profiles')) ? 'all' : implode(',', Tools::getValue('profiles'))) : (Tools::getValue('profiles') == '' ? 'all' : Tools::getValue('profiles')));
             }
             if (!Tools::getIsset('submitSaveReportAndContinue')) {
                 $report->profiles = (is_array(Tools::getValue('profiles')) ? (in_array('all', Tools::getValue('profiles')) ? 'all' : implode(',', Tools::getValue('profiles'))) : (Tools::getValue('profiles') == '' ? 'all' : Tools::getValue('profiles')));
             }
             $report->data_from = (Tools::getValue('type') == '3' ? '99' : (Tools::getValue('data_from') == '' ? '98' : Tools::getValue('data_from')));
+
             $report->save();
+
+
         }
         if (($id_report = Tools::getValue('id_advancedreports')) && Tools::getValue('submitAddadvancedreports') == '1' && !Tools::getIsset('submitSaveReportAndContinue')) {
             if (version_compare(_PS_VERSION_, '1.6', '<')) {
                 Tools::redirectAdmin('index.php?tab='.$this->tabClassName.'&token='.Tools::getAdminTokenLite($this->tabClassName).'&saved');
+
             } else {
                 Tools::redirectAdmin('index.php?controller='.$this->tabClassName.'&token='.Tools::getAdminTokenLite($this->tabClassName).'&saved');
             }
@@ -915,10 +926,12 @@ class AdminAdvancedReportsConfController extends ModuleAdminController
         if (($id_report = Tools::getValue('id_advancedreports')) && Tools::getValue('submitSaveReportAndContinue') == '1' && Tools::getValue('type') != '3') {
             if (version_compare(_PS_VERSION_, '1.6', '<')) {
                 Tools::redirectAdmin('index.php?tab='.$this->tabReportsFieldsClassName.'&token='.Tools::getAdminTokenLite($this->tabReportsFieldsClassName).'&step=2&id_report='.Tools::getValue('id_advancedreports'));
+
             } else {
                 Tools::redirectAdmin('index.php?controller='.$this->tabReportsFieldsClassName.'&token='.Tools::getAdminTokenLite($this->tabReportsFieldsClassName).'&step=2&id_report='.Tools::getValue('id_advancedreports'));
             }
         }
+
         return parent::afterUpdate($object);
     }
 
@@ -1040,7 +1053,9 @@ class AdminAdvancedReportsConfController extends ModuleAdminController
     protected function getAdvancedReportsTypes()
     {
         $types = array($this->l('Custom'), $this->l('SQL Query'));
-        $list_types = array(array('id' => '0', 'value' => '0', 'name' => $this->l('Custom')), array('id' => '3', 'value' => '3', 'name' => $this->l('SQL Query')));
+        $list_types = array(
+            array('id' => '0', 'value' => '0', 'name' => $this->l('Custom')),
+            array('id' => '3', 'value' => '3', 'name' => $this->l('SQL Query')));
         return $list_types;
     }
 
@@ -1611,6 +1626,16 @@ class AdminAdvancedReportsConfController extends ModuleAdminController
         $profiles = array_merge($profiles, Profile::getProfiles((int)($this->context->language->id)));
 
         $this->fields_form['input'][] = array(
+            'type' => 'textarea',
+            'label' => $this->l('Body Email'),
+            'name' => 'body_email',
+            'cols' => 60,
+            'rows' => 10,
+            'col' => 5,
+            'hint' => $this->l('Enter the SQL query to include in the body of the email. Use ## to separate multiple queries.'),
+        );
+
+        $this->fields_form['input'][] = array(
             'type' => 'select',
             'label' => $this->l('Profile(s)'),
             'name' => 'profiles[]',
@@ -1852,7 +1877,7 @@ class AdminAdvancedReportsConfController extends ModuleAdminController
                 'multiple' => true,
                 'col' => 5,
                 'class' => 'fixed-width-md',
-                'disabled' => ($report->type == '3' ? true : false),
+                'disabled' => ($report->type == '3' || $report->type == '99' ? true : false),
                 'options' => array(
                     'query' => $categories,
                     'id' => 'id_category',
@@ -1867,7 +1892,7 @@ class AdminAdvancedReportsConfController extends ModuleAdminController
                 'multiple' => true,
                 'col' => 5,
                 'class' => 'fixed-width-md',
-                'disabled' => ($report->type == '3' ? true : false),
+                'disabled' => ($report->type == '3'  ? true : false),
                 'options' => array(
                     'query' => $manufacturers,
                     'id' => 'id_manufacturer',

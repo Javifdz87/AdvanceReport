@@ -37,6 +37,7 @@ class AdminAdvancedReportsFieldsConfController extends ModuleAdminController
     
     public function __construct()
     {
+
         $this->bootstrap = true;
         $this->module_name = 'advancedreports';
         $this->table = 'advancedreports_fields';

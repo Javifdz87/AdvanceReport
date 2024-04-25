@@ -20,8 +20,9 @@
  * @author    idnovate
  * @copyright 2023 idnovate
  * @license   https://www.isc.org/licenses/ https://opensource.org/licenses/ISC ISC License
-*/
-include_once(_PS_MODULE_DIR_.'advancedreports/classes/tcpdf/tcpdf.php');
+ */
+include_once(_PS_MODULE_DIR_ . 'advancedreports/classes/tcpdf/tcpdf.php');
+
 class AdvancedReportsConfiguration extends ObjectModel
 {
     const TYPE_SQL = 8;
@@ -54,6 +55,7 @@ class AdvancedReportsConfiguration extends ObjectModel
     public $id_shop;
     public $date_add;
     public $date_upd;
+    public $body_email;
 
     /**
      * @see ObjectModel::$definition
@@ -62,34 +64,35 @@ class AdvancedReportsConfiguration extends ObjectModel
         'table' => 'advancedreports',
         'primary' => 'id_advancedreports',
         'fields' => array(
-            'name' =>               array('type' => self::TYPE_STRING, 'size' => 100),
-            'type' =>               array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'sql_query' =>          array('type' => self::TYPE_SQL),
-            'countries' =>          array('type' => self::TYPE_STRING, 'size' => 250),
-            'zones' =>              array('type' => self::TYPE_STRING, 'size' => 150),
-            'payments' =>           array('type' => self::TYPE_STRING, 'size' => 150),
-            'groups' =>             array('type' => self::TYPE_STRING, 'size' => 150),
-            'manufacturers' =>      array('type' => self::TYPE_STRING, 'size' => 150),
-            'suppliers' =>          array('type' => self::TYPE_STRING, 'size' => 150),
-            'categories' =>         array('type' => self::TYPE_STRING, 'size' => 150),
-            'statuses' =>           array('type' => self::TYPE_STRING, 'size' => 150),
-            'data_from' =>          array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'frequency' =>          array('type' => self::TYPE_INT),
-            'frequency_week' =>     array('type' => self::TYPE_INT),
-            'frequency_month' =>    array('type' => self::TYPE_INT),
-            'frequency_year' =>     array('type' => self::TYPE_DATE, 'copy_post' => false),
-            'format' =>             array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'email' =>              array('type' => self::TYPE_STRING, 'size' => 250),
-            'profiles' =>           array('type' => self::TYPE_STRING, 'size' => 150),
-            'date_from' =>          array('type' => self::TYPE_DATE, 'copy_post' => false),
-            'date_to' =>            array('type' => self::TYPE_DATE, 'copy_post' => false),
-            'fields' =>             array('type' => self::TYPE_STRING, 'size' => 2500),
-            'groupby' =>            array('type' => self::TYPE_STRING, 'size' => 250),
-            'orderby' =>            array('type' => self::TYPE_STRING, 'size' => 250),
-            'active' =>             array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false),
-            'id_shop' =>            array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'copy_post' => false),
-            'date_add' =>           array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false),
-            'date_upd' =>           array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false),
+            'name' => array('type' => self::TYPE_STRING, 'size' => 100),
+            'type' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'sql_query' => array('type' => self::TYPE_SQL),
+            'countries' => array('type' => self::TYPE_STRING, 'size' => 250),
+            'zones' => array('type' => self::TYPE_STRING, 'size' => 150),
+            'payments' => array('type' => self::TYPE_STRING, 'size' => 150),
+            'groups' => array('type' => self::TYPE_STRING, 'size' => 150),
+            'manufacturers' => array('type' => self::TYPE_STRING, 'size' => 150),
+            'suppliers' => array('type' => self::TYPE_STRING, 'size' => 150),
+            'categories' => array('type' => self::TYPE_STRING, 'size' => 150),
+            'statuses' => array('type' => self::TYPE_STRING, 'size' => 150),
+            'data_from' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'frequency' => array('type' => self::TYPE_INT),
+            'frequency_week' => array('type' => self::TYPE_INT),
+            'frequency_month' => array('type' => self::TYPE_INT),
+            'frequency_year' => array('type' => self::TYPE_DATE, 'copy_post' => false),
+            'format' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'email' => array('type' => self::TYPE_STRING, 'size' => 250),
+            'body_email' => array('type' => self::TYPE_STRING, 'size' => 250),
+            'profiles' => array('type' => self::TYPE_STRING, 'size' => 150),
+            'date_from' => array('type' => self::TYPE_DATE, 'copy_post' => false),
+            'date_to' => array('type' => self::TYPE_DATE, 'copy_post' => false),
+            'fields' => array('type' => self::TYPE_STRING, 'size' => 2500),
+            'groupby' => array('type' => self::TYPE_STRING, 'size' => 250),
+            'orderby' => array('type' => self::TYPE_STRING, 'size' => 250),
+            'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false),
+            'id_shop' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'copy_post' => false),
+            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false),
+            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false),
         ),
     );
 
@@ -115,9 +118,9 @@ class AdvancedReportsConfiguration extends ObjectModel
     {
         parent::toggleStatus();
         return Db::getInstance()->execute('
-        UPDATE `'._DB_PREFIX_.bqSQL($this->def['table']).'`
+        UPDATE `' . _DB_PREFIX_ . bqSQL($this->def['table']) . '`
         SET `date_upd` = NOW()
-        WHERE `'.bqSQL($this->def['primary']).'` = '.(int)$this->id);
+        WHERE `' . bqSQL($this->def['primary']) . '` = ' . (int)$this->id);
     }
 
     public function delete()
@@ -154,7 +157,7 @@ class AdvancedReportsConfiguration extends ObjectModel
                 $result = $this->processExport($report_conf['id_advancedreports'], true);
                 $file = array();
                 if ($report_conf['email'] && $report_conf['email'] != '') {
-                    $emails = explode(',', $report_conf['email']);
+                    $emails = explode('###', $report_conf['email']);
                     foreach ($emails as $email) {
                         $email = trim($email);
                         if (Validate::isEmail($email)) {
@@ -162,7 +165,9 @@ class AdvancedReportsConfiguration extends ObjectModel
                                 $file = $result;
                             }
                             $module = Module::getInstanceByName($this->module_name);
-                            $data = array('report_txt' => sprintf($module->l('Report #%s - %s'), $report_conf['id_advancedreports'], $report_conf['name']));
+
+
+                            $data = array('report_txt' => 'Correcto');
                             Mail::Send(
                                 (int)$context->language->id,
                                 'report_template',
@@ -174,10 +179,11 @@ class AdvancedReportsConfiguration extends ObjectModel
                                 null,
                                 $file,
                                 null,
-                                _PS_MODULE_DIR_.$this->module_name.'/mails/',
+                                _PS_MODULE_DIR_ . $this->module_name . '/mails/',
                                 false,
                                 (int)$report_conf['id_shop']
                             );
+
                         }
                     }
                 }
@@ -188,6 +194,7 @@ class AdvancedReportsConfiguration extends ObjectModel
 
     public function processExport($id = false, $cron = false)
     {
+
         try {
             if ($id) {
                 $cron = true;
@@ -195,7 +202,7 @@ class AdvancedReportsConfiguration extends ObjectModel
                 $id = Tools::getValue($this->identifier);
             }
             $context = Context::getContext();
-            $export_dir = defined('_PS_HOST_MODE_') ? _PS_MODULE_DIR_.'/advancedreports/export/' : _PS_MODULE_DIR_.'/advancedreports/export/';
+            $export_dir = defined('_PS_HOST_MODE_') ? _PS_MODULE_DIR_ . '/advancedreports/export/' : _PS_MODULE_DIR_ . '/advancedreports/export/';
             if (!Validate::isFileName($id)) {
                 die(Tools::displayError());
             }
@@ -208,150 +215,254 @@ class AdvancedReportsConfiguration extends ObjectModel
                 $format = 'csv';
             }
             $xls = '';
-            $file = $report->name.'_'.date('d-m-Y_His').'.'.$format;
+            $file = $report->name . '_' . date('d-m-Y_His') . '.' . $format;
             $results = array();
-            if ($csv = fopen($export_dir.$file, 'w')) {
+            if ($csv = fopen($export_dir . $file, 'w')) {
                 if ($report->format != '2') {
                     fputs($csv, "\xEF\xBB\xBF");
                 }
-                $sql = $report->sql_query;
-                if ($sql) {
-                    $queries = explode(';', $report->sql_query);
+                $sql_email = $report->body_email;
+
+                if ($sql_email) {
+                    $html_tables = array();
+
+                    $queries = explode('###', $report->body_email);
                     foreach ($queries as $query) {
                         $query = trim($query);
                         if ($query != '') {
                             if (substr(Tools::strtoupper($query), 0, 6) == 'SELECT' || Tools::strtolower(substr($query, 0, 7)) == '(select') {
                                 $results = Db::getInstance()->executeS($query);
+                                    $num_columns = count($results[0]);
+                                    if ($num_columns == 1) {
+                                        $value = reset($results[0]);
+
+                                        $html_tables[] = $value;
+                                    } else {
+                                        $html_table = $this->createTable($results);
+                                        $html_tables[] = $html_table;
+                                    }
+
+
                             } else {
                                 $res = Db::getInstance()->execute($query);
                             }
                         }
                     }
-                } else {
-                    $conf = new AdvancedReportsConfiguration();
-                    $results = $conf->getReportResults($report);
-                }
-                $pdf = '';
-                if ($report->format == '2') {
-                    $pdf = $this->processPDF($report, $file, $cron);
-                    file_put_contents($export_dir.$file, $pdf);
-                } else {
-                    $tab_key = array();
-                    if (is_array($results) && count($results) > 0) {
-                        $_count = array_keys($results[0]);
-                        foreach (array_keys($results[0]) as $_count => $key) {
-                            $tab_key[] = $key;
-                            if($_count !== count(array_keys($results[0])) -1 ) {
-                                fputs($csv, $key.';');
-                            } else {
-                                fputs($csv, $key);
-                            }
-                            $xls .= $key."\t";
+
+                    if ($report->frequency == '0') { //daily
+                        $execute = true;
+                    } elseif ($report->frequency == '1') { //weekly
+                        $dayofweek = date('w');
+                        if ($report->frequency_week == $dayofweek) {
+                            $execute = true;
                         }
-                        foreach ($results as $result) {
-                            fputs($csv, "\n");
-                            $xls .= "\n";
-                            foreach ($tab_key as $_count => $name) {
-                                if (is_int($result[$name]) || is_float($result[$name]) || is_double($result[$name])) {
-                                    $result[$name] = $this->formatDecimalsSeparator($result[$name], $context->currency, $context);
-                                    if($_count !== count($tab_key) -1 ) {
-                                        fputs($csv, strip_tags($result[$name]).';');
-                                    } else {
-                                        fputs($csv, strip_tags($result[$name]));
-                                    }
+                    } elseif ($report->frequency == '2') { //monthly
+                        $dayofmonth = date('d');
+                        $lastdayofmonth = date('t');
+                        if ($report->frequency_month == $dayofmonth || ($report->frequency_month == 99 && $dayofmonth == $lastdayofmonth)) {
+                            $execute = true;
+                        }
+                    } elseif ($report->frequency == '3') { //year
+                        $dayandmonth = date('m-d');
+                        if (date('m-d', strtotime($report->frequency_year)) == $dayandmonth) {
+                            $execute = true;
+                        }
+                    }
+                    $file = array();
+                    $emails = explode('###', $report->email);
+                    foreach ($emails as $email) {
+                        $email = trim($email);
+                        if (Validate::isEmail($email)) {
+                            $module = Module::getInstanceByName($this->module_name);
+                            $report_txt = implode('<br><br>', $html_tables);
+
+
+                            $data = array('report_txt' => $report_txt);
+                            Mail::Send(
+                                (int)$context->language->id,
+                                'report_template',
+                                sprintf($module->l('Report #%s - %s'), $report->id_advancedreports, $report->name),
+                                $data,
+                                $email,
+                                null,
+                                null,
+                                null,
+                                $file,
+                                null,
+                                _PS_MODULE_DIR_ . $this->module_name . '/mails/',
+                                false,
+                                (int)$report->id_shop
+                                );
+                            }
+                        }
+                    }
+
+                    $sql = $report->sql_query;
+                    if ($sql) {
+                        $queries = explode(';', $report->sql_query);
+                        foreach ($queries as $query) {
+                            $query = trim($query);
+                            if ($query != '') {
+                                if (substr(Tools::strtoupper($query), 0, 6) == 'SELECT' || Tools::strtolower(substr($query, 0, 7)) == '(select') {
+                                    $results = Db::getInstance()->executeS($query);
+
                                 } else {
-                                    if($_count !== count($tab_key) -1 ) {
-                                        fputs($csv, '"'.strip_tags($result[$name]).'";');
-                                    } else {
-                                        fputs($csv, '"'.strip_tags($result[$name]).'"');
-                                    }
+                                    $res = Db::getInstance()->execute($query);
                                 }
-                                $xls .= strip_tags($result[$name])."\t";
                             }
                         }
                     } else {
-                        $module = Module::getInstanceByName($this->module_name);
-                        $xls .= $module->l('No records found')."\t";
-                        fputs($csv, $module->l('No records found').';');
+                        $conf = new AdvancedReportsConfiguration();
+                        $results = $conf->getReportResults($report);
                     }
-                    fclose($csv);
-                    if ($report->format == '0') {
-                        include_once(_PS_MODULE_DIR_.'advancedreports/classes/PhpSpreadsheet/vendor/autoload.php');
-                        $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader('Csv');
-                        try {
-                            $objPHPExcel = $objReader->load($export_dir.$file);
-                        } catch (Exception $e) {
-                            header("Content-Type: application/vnd.ms-excel");
-                            header('Content-Disposition: attachment; filename="'.$file.'"');
-                            readfile($export_dir.$file);
-                            die();
-                        }
-                        $objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, 'Xls');
-                        $objWriter->save($export_dir.$file);
-                    }
-                }
-                if (file_exists($export_dir.$file)) {
-                    $filesize = filesize($export_dir.$file);
-                    $upload_max_filesize = Tools::convertBytes(ini_get('upload_max_filesize'));
-                    if ($filesize < $upload_max_filesize) {
-                        if (Configuration::get('PS_ENCODING_FILE_MANAGER_SQL')) {
-                            $charset = Configuration::get('PS_ENCODING_FILE_MANAGER_SQL');
+                    $pdf = '';
+                    if ($report->format == '2') {
+                        $pdf = $this->processPDF($report, $file, $cron);
+                        file_put_contents($export_dir . $file, $pdf);
+                    } else {
+                        $tab_key = array();
+                        if (is_array($results) && count($results) > 0) {
+                            $_count = array_keys($results[0]);
+                            foreach (array_keys($results[0]) as $_count => $key) {
+                                $tab_key[] = $key;
+                                if ($_count !== count(array_keys($results[0])) - 1) {
+                                    fputs($csv, $key . ';');
+                                } else {
+                                    fputs($csv, $key);
+                                }
+                                $xls .= $key . "\t";
+                            }
+                            foreach ($results as $result) {
+                                fputs($csv, "\n");
+                                $xls .= "\n";
+                                foreach ($tab_key as $_count => $name) {
+                                    if (is_int($result[$name]) || is_float($result[$name]) || is_double($result[$name])) {
+                                        $result[$name] = $this->formatDecimalsSeparator($result[$name], $context->currency, $context);
+                                        if ($_count !== count($tab_key) - 1) {
+                                            fputs($csv, strip_tags($result[$name]) . ';');
+                                        } else {
+                                            fputs($csv, strip_tags($result[$name]));
+                                        }
+                                    } else {
+                                        if ($_count !== count($tab_key) - 1) {
+                                            fputs($csv, '"' . strip_tags($result[$name]) . '";');
+                                        } else {
+                                            fputs($csv, '"' . strip_tags($result[$name]) . '"');
+                                        }
+                                    }
+                                    $xls .= strip_tags($result[$name]) . "\t";
+                                }
+                            }
                         } else {
-                            $charset = self::$encoding_file[0]['name'];
+                            $module = Module::getInstanceByName($this->module_name);
+                            $xls .= $module->l('No records found') . "\t";
+                            fputs($csv, $module->l('No records found') . ';');
                         }
-                        if (!$cron) {
-                            if ($report->format == '0') {
+                        fclose($csv);
+                        if ($report->format == '0') {
+                            include_once(_PS_MODULE_DIR_ . 'advancedreports/classes/PhpSpreadsheet/vendor/autoload.php');
+                            $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader('Csv');
+                            try {
+                                $objPHPExcel = $objReader->load($export_dir . $file);
+                            } catch (Exception $e) {
                                 header("Content-Type: application/vnd.ms-excel");
-                                header('Content-Disposition: attachment; filename="'.$file.'"');
-                            } elseif ($report->format == '2') {
-                                header("Content-Type: application/pdf");
-                                header('Content-Disposition: attachment; filename="'.$file.'"');
-                                header('Content-Length: '.$filesize);
-                            } else {
-                                header("Content-Type: text/csv; charset=" . $charset );
-                                header('Content-Disposition: attachment; filename="'.$file.'"');
-                                header('Content-Length: '.$filesize);
-                            }
-                            header("Cache-Control: no-cache, no-store, must-revalidate, max-age=0");
-                            header("Cache-Control: post-check=0, pre-check=0", false);
-                            header("Pragma: no-cache");
-                            header("Expires: Jue, 1 Jan 1970 00:00:00 GMT");
-                            if ($report->format == '0') {
-                                readfile($export_dir.$file);
-                                die();
-                            } elseif ($report->format == '2') {
-                                readfile($export_dir.$file);
-                                die();
-                            } else {
-                                readfile($export_dir.$file);
+                                header('Content-Disposition: attachment; filename="' . $file . '"');
+                                readfile($export_dir . $file);
                                 die();
                             }
+                            $objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, 'Xls');
+                            $objWriter->save($export_dir . $file);
                         }
-                    } else {
-                        d(Tools::DisplayError('The file is too large and can not be downloaded. Please use the LIMIT clause in this query.'));
                     }
-                    if ($cron) {
-                        $attachment = array();
-                        if ($report->format == '2') {
-                            $attachment['content'] = $pdf;
-                            $attachment['mime'] = 'application/pdf';
-                        } elseif ($report->format == '0') {
-                            $attachment['content'] = Tools::file_get_contents($export_dir.$file);
-                            $attachment['mime'] = 'application/vnd.ms-excel';
+                    if (file_exists($export_dir . $file)) {
+                        $filesize = filesize($export_dir . $file);
+                        $upload_max_filesize = Tools::convertBytes(ini_get('upload_max_filesize'));
+                        if ($filesize < $upload_max_filesize) {
+                            if (Configuration::get('PS_ENCODING_FILE_MANAGER_SQL')) {
+                                $charset = Configuration::get('PS_ENCODING_FILE_MANAGER_SQL');
+                            } else {
+                                $charset = self::$encoding_file[0]['name'];
+                            }
+                            if (!$cron) {
+                                if ($report->format == '0') {
+                                    header("Content-Type: application/vnd.ms-excel");
+                                    header('Content-Disposition: attachment; filename="' . $file . '"');
+                                } elseif ($report->format == '2') {
+                                    header("Content-Type: application/pdf");
+                                    header('Content-Disposition: attachment; filename="' . $file . '"');
+                                    header('Content-Length: ' . $filesize);
+                                } else {
+                                    header("Content-Type: text/csv; charset=" . $charset);
+                                    header('Content-Disposition: attachment; filename="' . $file . '"');
+                                    header('Content-Length: ' . $filesize);
+                                }
+                                header("Cache-Control: no-cache, no-store, must-revalidate, max-age=0");
+                                header("Cache-Control: post-check=0, pre-check=0", false);
+                                header("Pragma: no-cache");
+                                header("Expires: Jue, 1 Jan 1970 00:00:00 GMT");
+                                if ($report->format == '0') {
+                                    readfile($export_dir . $file);
+                                    die();
+                                } elseif ($report->format == '2') {
+                                    readfile($export_dir . $file);
+                                    die();
+                                } else {
+                                    readfile($export_dir . $file);
+                                    die();
+                                }
+                            }
                         } else {
-                            $attachment['content'] = Tools::file_get_contents($export_dir.$file);
-                            $attachment['mime'] = 'application/text';
+                            d(Tools::DisplayError('The file is too large and can not be downloaded. Please use the LIMIT clause in this query.'));
                         }
-                        $attachment['name'] = $file;
-                        return $attachment;
+                        if ($cron) {
+                            $attachment = array();
+                            if ($report->format == '2') {
+                                $attachment['content'] = $pdf;
+                                $attachment['mime'] = 'application/pdf';
+                            } elseif ($report->format == '0') {
+                                $attachment['content'] = Tools::file_get_contents($export_dir . $file);
+                                $attachment['mime'] = 'application/vnd.ms-excel';
+                            } else {
+                                $attachment['content'] = Tools::file_get_contents($export_dir . $file);
+                                $attachment['mime'] = 'application/text';
+                            }
+                            $attachment['name'] = $file;
+                            return $attachment;
+                        }
                     }
                 }
+                return true;
             }
-            return true;
-        } catch (Exception $e) {
-            throw new PrestaShopException($e->getMessage());
-        }
+        catch
+            (Exception $e) {
+                throw new PrestaShopException($e->getMessage());
+            }
     }
+
+    public function createTable($results)
+    {
+
+        $html = '<table border="1">';
+
+        $html .= '<tr>';
+        foreach (array_keys($results[0]) as $key) {
+            $html .= '<th>' . htmlspecialchars($key) . '</th>';
+
+        }
+        $html .= '</tr>';
+
+        foreach ($results as $result) {
+            $html .= '<tr>';
+            foreach ($result as $value) {
+                $html .= '<td>' . htmlspecialchars($value) . '</td>';
+            }
+            $html .= '</tr>';
+        }
+
+        $html .= '</table>';
+        return $html;
+    }
+
 
     public function processPDF($report, $file, $cron = false)
     {
@@ -364,28 +475,28 @@ class AdvancedReportsConfiguration extends ObjectModel
         $title = sprintf($module->l('Report #%s (%s)'), $report->id_advancedreports, Tools::displayDate(date('Y-m-d H:i:s'), null, 1));
         $subject = $report->name;
         $path_logo = '';
-        if (Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop))) {
-            $path_logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop);
-        } elseif (Configuration::get('PS_LOGO', null, null, $id_shop) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, $id_shop))) {
-            $path_logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, $id_shop);
+        if (Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop) != false && file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop))) {
+            $path_logo = _PS_IMG_DIR_ . Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop);
+        } elseif (Configuration::get('PS_LOGO', null, null, $id_shop) != false && file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO', null, null, $id_shop))) {
+            $path_logo = _PS_IMG_DIR_ . Configuration::get('PS_LOGO', null, null, $id_shop);
         }
-        if (file_exists(K_PATH_IMAGES_AR.PDF_HEADER_LOGO_AR)) {
+        if (file_exists(K_PATH_IMAGES_AR . PDF_HEADER_LOGO_AR)) {
             if (version_compare(_PS_VERSION_, '1.6', '>=')) {
-                copy($path_logo,K_PATH_IMAGES_AR.PDF_HEADER_LOGO_AR.'logo.png');
+                copy($path_logo, K_PATH_IMAGES_AR . PDF_HEADER_LOGO_AR . 'logo.png');
             } else {
-                copy($path_logo,K_PATH_IMAGES_AR.PDF_HEADER_LOGO_AR);
+                copy($path_logo, K_PATH_IMAGES_AR . PDF_HEADER_LOGO_AR);
             }
         } else {
             mkdir(K_PATH_IMAGES_AR);
-            copy($path_logo, K_PATH_IMAGES_AR.PDF_HEADER_LOGO_AR);
+            copy($path_logo, K_PATH_IMAGES_AR . PDF_HEADER_LOGO_AR);
         }
         $pdf = new TCPDF_AR('L', PDF_UNIT_AR, PDF_PAGE_FORMAT_AR, true, 'UTF-8', false);
         $pdf->setCreator(PDF_CREATOR_AR);
         $pdf->setAuthor($author);
         $pdf->setTitle($title);
         $pdf->setSubject($subject);
-        $pdf->setHeaderData(PDF_HEADER_LOGO_AR, PDF_HEADER_LOGO_WIDTH_AR, $title, $subject, array(0,0,0), array(0,0,0));
-        $pdf->setFooterData(array(0,0,0), array(0,0,0));
+        $pdf->setHeaderData(PDF_HEADER_LOGO_AR, PDF_HEADER_LOGO_WIDTH_AR, $title, $subject, array(0, 0, 0), array(0, 0, 0));
+        $pdf->setFooterData(array(0, 0, 0), array(0, 0, 0));
         $pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN_AR, '', PDF_FONT_SIZE_MAIN_AR));
         $pdf->setFooterFont(array(PDF_FONT_NAME_DATA_AR, '', PDF_FONT_SIZE_DATA_AR));
         $pdf->setDefaultMonospacedFont(PDF_FONT_MONOSPACED_AR);
@@ -397,7 +508,7 @@ class AdvancedReportsConfiguration extends ObjectModel
         $pdf->setFontSubsetting(true);
         $pdf->setFont('helvetica', '', 7, '', true);
         $pdf->addPage();
-        $pdf->setTextShadow(array('enabled'=>false, 'depth_w'=>0.2, 'depth_h'=>0.2, 'color'=>array(196,196,196), 'opacity'=>1, 'blend_mode'=>'Normal'));
+        $pdf->setTextShadow(array('enabled' => false, 'depth_w' => 0.2, 'depth_h' => 0.2, 'color' => array(196, 196, 196), 'opacity' => 1, 'blend_mode' => 'Normal'));
         $html = $this->generateHtmlToPdf($report);
         $pdf->writeHTMLCell(0, 0, 5, 8, $html, 0, 1, 0, true, '', true);
         ob_end_clean();
@@ -438,8 +549,8 @@ class AdvancedReportsConfiguration extends ObjectModel
     {
         return Db::getInstance()->executeS(
             'SELECT ar.*
-                FROM `'._DB_PREFIX_.'advancedreports` ar
-                WHERE ar.`id_shop` = '.(int)$id_shop.'
+                FROM `' . _DB_PREFIX_ . 'advancedreports` ar
+                WHERE ar.`id_shop` = ' . (int)$id_shop . '
                 AND ar.`active` = 1;'
         );
     }
@@ -448,8 +559,8 @@ class AdvancedReportsConfiguration extends ObjectModel
     {
         return Db::getInstance()->getValue(
             'SELECT af.`table`
-                FROM `'._DB_PREFIX_.'advancedreports_fields` af
-                WHERE af.`id_report` = '.(int)$report_id.'
+                FROM `' . _DB_PREFIX_ . 'advancedreports_fields` af
+                WHERE af.`id_report` = ' . (int)$report_id . '
                 AND af.`active` = 1
                 ORDER BY af.`position`;'
         );
@@ -459,8 +570,8 @@ class AdvancedReportsConfiguration extends ObjectModel
     {
         $table = Db::getInstance()->getValue(
             'SELECT af.`table`
-                FROM `'._DB_PREFIX_.'advancedreports_fields` af
-                WHERE af.`id_report` = '.(int)$report_id.'
+                FROM `' . _DB_PREFIX_ . 'advancedreports_fields` af
+                WHERE af.`id_report` = ' . (int)$report_id . '
                 AND af.`active` = 1
                 ORDER BY af.`position`;'
         );
@@ -479,8 +590,8 @@ class AdvancedReportsConfiguration extends ObjectModel
     {
         return Db::getInstance()->getValue(
             'SELECT af.`field`
-                FROM `'._DB_PREFIX_.'advancedreports_fields` af
-                WHERE af.`id_report` = '.(int)$report_id.'
+                FROM `' . _DB_PREFIX_ . 'advancedreports_fields` af
+                WHERE af.`id_report` = ' . (int)$report_id . '
                 AND af.`active` = 1
                 ORDER BY af.`position`;'
         );
@@ -490,8 +601,8 @@ class AdvancedReportsConfiguration extends ObjectModel
     {
         return Db::getInstance()->getValue(
             'SELECT `id_advancedreports`
-                FROM `'._DB_PREFIX_.'advancedreports` ar
-                WHERE ar.`id_shop` = '.(int)$id_shop.'
+                FROM `' . _DB_PREFIX_ . 'advancedreports` ar
+                WHERE ar.`id_shop` = ' . (int)$id_shop . '
                 ORDER BY `id_advancedreports` DESC;'
         );
     }
@@ -539,22 +650,22 @@ class AdvancedReportsConfiguration extends ObjectModel
                         $fields_list[$key] = array('title' => $key, 'type' => 'text');
                     }
                 }
-            }            
+            }
         }
         if ($report->format == '2' && count($results) == 0) {
             $reportClass = new AdvancedReports();
-            return '<br><br><br><br><br>'.$reportClass->l('No records found.');
+            return '<br><br><br><br><br>' . $reportClass->l('No records found.');
         }
         $html = '<br><br><br><br><table style="width:100%">';
         $html .= '<tr>';
         foreach ($fields_list as $field) {
-            $html .= '<th><strong>'.$field['title'].'</strong></th>';
+            $html .= '<th><strong>' . $field['title'] . '</strong></th>';
         }
         $html .= '</tr>';
         foreach ($results as $result) {
             $html .= '<tr>';
             foreach ($result as $value) {
-                $html .= '<td>'.$value.'</td>';
+                $html .= '<td>' . $value . '</td>';
             }
             $html .= '</tr>';
         }
@@ -568,10 +679,10 @@ class AdvancedReportsConfiguration extends ObjectModel
         $context = Context::getContext();
         $conf = Db::getInstance()->executeS(
             'SELECT af.`table`, af.`table` as table2, af.`field`, af.`field_name`, af.`groupby`, af.`orderby`, af.`sum`
-                FROM `'._DB_PREFIX_.'advancedreports_fields` af
-                WHERE af.`id_shop` = '.(int)$report->id_shop.'
+                FROM `' . _DB_PREFIX_ . 'advancedreports_fields` af
+                WHERE af.`id_shop` = ' . (int)$report->id_shop . '
                 AND af.`active` = 1
-                AND af.`id_report` = '.(int)$report->id_advancedreports.'
+                AND af.`id_report` = ' . (int)$report->id_advancedreports . '
                 ORDER BY af.`position`;'
         );
         $_fields = array();
@@ -683,157 +794,157 @@ class AdvancedReportsConfiguration extends ObjectModel
             }
             if ($field['sum'] == '1') {
                 $_sum = true;
-                $_fields_sum[] = 'SUM('._DB_PREFIX_.$field['table'].'.'.$field['field'].') AS `'.($field['field_name'] != '' ? $field['field_name'] : $field['field']).'`';
-                $_fields[] = _DB_PREFIX_.$field['table'].'.'.$field['field'].' AS `'.($field['field_name'] != '' ? $field['field_name'] : $field['field']).'`';
+                $_fields_sum[] = 'SUM(' . _DB_PREFIX_ . $field['table'] . '.' . $field['field'] . ') AS `' . ($field['field_name'] != '' ? $field['field_name'] : $field['field']) . '`';
+                $_fields[] = _DB_PREFIX_ . $field['table'] . '.' . $field['field'] . ' AS `' . ($field['field_name'] != '' ? $field['field_name'] : $field['field']) . '`';
             } else {
                 if ($key == 0) {
                     $_fields_sum[] = '"Total" AS `Total`';
                 } else {
-                    $_fields_sum[] = '"--" AS `'.$reportClass->l('Total').'`';
+                    $_fields_sum[] = '"--" AS `' . $reportClass->l('Total') . '`';
                 }
-                $_fields[] = _DB_PREFIX_.$field['table'].'.'.$field['field'].' AS `'.($field['field_name'] != '' ? $field['field_name'] : $field['field']).'`';
+                $_fields[] = _DB_PREFIX_ . $field['table'] . '.' . $field['field'] . ' AS `' . ($field['field_name'] != '' ? $field['field_name'] : $field['field']) . '`';
             }
             $_tables[] = $field['table'];
             if ($field['groupby'] == '1') {
-                $_groupby[] = _DB_PREFIX_.$field['table'].'.'.$field['field'];
+                $_groupby[] = _DB_PREFIX_ . $field['table'] . '.' . $field['field'];
             }
             if ($field['orderby'] == '1') {
-                $_orderby[] = _DB_PREFIX_.$field['table'].'.'.$field['field'];
+                $_orderby[] = _DB_PREFIX_ . $field['table'] . '.' . $field['field'];
             }
         }
-        $_select = 'SELECT '.implode(',', $_fields);
-        $_select = str_replace(_DB_PREFIX_.'address_delivery', _DB_PREFIX_.'address', $_select);
-        $_select = str_replace(_DB_PREFIX_.'address_invoice', _DB_PREFIX_.'address', $_select);
-        $_select_sum = 'SELECT '.implode(',', $_fields_sum);
+        $_select = 'SELECT ' . implode(',', $_fields);
+        $_select = str_replace(_DB_PREFIX_ . 'address_delivery', _DB_PREFIX_ . 'address', $_select);
+        $_select = str_replace(_DB_PREFIX_ . 'address_invoice', _DB_PREFIX_ . 'address', $_select);
+        $_select_sum = 'SELECT ' . implode(',', $_fields_sum);
         $_tables = array_unique($_tables);
         $_alltables = $_tables;
-        if(in_array('orders', $_alltables)) {
-            $_primary_table = _DB_PREFIX_.'orders';
+        if (in_array('orders', $_alltables)) {
+            $_primary_table = _DB_PREFIX_ . 'orders';
         } else {
-            $_primary_table = _DB_PREFIX_.$_tables[0];
+            $_primary_table = _DB_PREFIX_ . $_tables[0];
         }
-        $_from = ' FROM '.$_primary_table;
+        $_from = ' FROM ' . $_primary_table;
         if (count($_tables) > 0) {
             //$_tables = array_splice($_tables, 1);
-            if ($_primary_table == _DB_PREFIX_.'orders') {
+            if ($_primary_table == _DB_PREFIX_ . 'orders') {
                 if (in_array('order_detail', $_tables)) {
-                    $_join .= ' INNER JOIN '._DB_PREFIX_.'order_detail ON ('.$_primary_table.'.id_order = '._DB_PREFIX_.'order_detail'.'.id_order)';
+                    $_join .= ' INNER JOIN ' . _DB_PREFIX_ . 'order_detail ON (' . $_primary_table . '.id_order = ' . _DB_PREFIX_ . 'order_detail' . '.id_order)';
                 }
                 if (in_array('customer', $_tables)) {
-                    $_join .= ' INNER JOIN '._DB_PREFIX_.'customer ON ('.$_primary_table.'.id_customer = '._DB_PREFIX_.'customer'.'.id_customer)';
+                    $_join .= ' INNER JOIN ' . _DB_PREFIX_ . 'customer ON (' . $_primary_table . '.id_customer = ' . _DB_PREFIX_ . 'customer' . '.id_customer)';
                 }
                 if (in_array('address', $_tables)) {
-                    $_join .= ' INNER JOIN `'._DB_PREFIX_.'address` ON ('.$_primary_table.'.id_address_invoice = '._DB_PREFIX_.'address.id_address)';
-                    $_join .= ' INNER JOIN `'._DB_PREFIX_.'country` ON ('._DB_PREFIX_.'address.id_country = '._DB_PREFIX_.'country.id_country)';
-                    $_join .= ' INNER JOIN `'._DB_PREFIX_.'country_lang` ON ('._DB_PREFIX_.'country.id_country = '._DB_PREFIX_.'country_lang.id_country AND '._DB_PREFIX_.'country_lang.id_lang = '.$context->language->id.')';
+                    $_join .= ' INNER JOIN `' . _DB_PREFIX_ . 'address` ON (' . $_primary_table . '.id_address_invoice = ' . _DB_PREFIX_ . 'address.id_address)';
+                    $_join .= ' INNER JOIN `' . _DB_PREFIX_ . 'country` ON (' . _DB_PREFIX_ . 'address.id_country = ' . _DB_PREFIX_ . 'country.id_country)';
+                    $_join .= ' INNER JOIN `' . _DB_PREFIX_ . 'country_lang` ON (' . _DB_PREFIX_ . 'country.id_country = ' . _DB_PREFIX_ . 'country_lang.id_country AND ' . _DB_PREFIX_ . 'country_lang.id_lang = ' . $context->language->id . ')';
                     $_join_address = true;
                 }
             }
-            if ($_primary_table == _DB_PREFIX_.'order_detail') {
-                $_join .= ' INNER JOIN '._DB_PREFIX_.'orders ON ('.$_primary_table.'.id_order = '._DB_PREFIX_.'orders'.'.id_order)';
+            if ($_primary_table == _DB_PREFIX_ . 'order_detail') {
+                $_join .= ' INNER JOIN ' . _DB_PREFIX_ . 'orders ON (' . $_primary_table . '.id_order = ' . _DB_PREFIX_ . 'orders' . '.id_order)';
                 if (in_array('customer', $_tables)) {
-                    $_join .= ' INNER JOIN '._DB_PREFIX_.'customer ON ('._DB_PREFIX_.'orders.id_customer = '._DB_PREFIX_.'customer'.'.id_customer)';
+                    $_join .= ' INNER JOIN ' . _DB_PREFIX_ . 'customer ON (' . _DB_PREFIX_ . 'orders.id_customer = ' . _DB_PREFIX_ . 'customer' . '.id_customer)';
                 }
                 if (in_array('address', $_tables)) {
-                    $_join .= ' INNER JOIN `'._DB_PREFIX_.'address` ON ('._DB_PREFIX_.'orders.id_address_invoice = '._DB_PREFIX_.'address.id_address)';
-                    $_join .= ' INNER JOIN `'._DB_PREFIX_.'country` ON ('._DB_PREFIX_.'address.id_country = '._DB_PREFIX_.'country.id_country)';
-                    $_join .= ' INNER JOIN `'._DB_PREFIX_.'country_lang` ON ('._DB_PREFIX_.'country.id_country = '._DB_PREFIX_.'country_lang.id_country AND '._DB_PREFIX_.'country_lang.id_lang = '.$context->language->id.')';
+                    $_join .= ' INNER JOIN `' . _DB_PREFIX_ . 'address` ON (' . _DB_PREFIX_ . 'orders.id_address_invoice = ' . _DB_PREFIX_ . 'address.id_address)';
+                    $_join .= ' INNER JOIN `' . _DB_PREFIX_ . 'country` ON (' . _DB_PREFIX_ . 'address.id_country = ' . _DB_PREFIX_ . 'country.id_country)';
+                    $_join .= ' INNER JOIN `' . _DB_PREFIX_ . 'country_lang` ON (' . _DB_PREFIX_ . 'country.id_country = ' . _DB_PREFIX_ . 'country_lang.id_country AND ' . _DB_PREFIX_ . 'country_lang.id_lang = ' . $context->language->id . ')';
                     $_join_address = true;
                 }
-                $_primary_table = _DB_PREFIX_.'orders';
+                $_primary_table = _DB_PREFIX_ . 'orders';
             }
-            if ($_primary_table == _DB_PREFIX_.'customer') {
+            if ($_primary_table == _DB_PREFIX_ . 'customer') {
                 if (in_array('orders', $_tables)) {
-                    $_join .= ' INNER JOIN '._DB_PREFIX_.'orders ON ('.$_primary_table.'.id_customer = '._DB_PREFIX_.'orders'.'.id_customer)';
+                    $_join .= ' INNER JOIN ' . _DB_PREFIX_ . 'orders ON (' . $_primary_table . '.id_customer = ' . _DB_PREFIX_ . 'orders' . '.id_customer)';
                 }
                 if (in_array('order_detail', $_tables)) {
                     if (!in_array('orders', $_tables)) {
-                        $_join .= ' INNER JOIN '._DB_PREFIX_.'orders ON ('.$_primary_table.'.id_customer = '._DB_PREFIX_.'orders'.'.id_customer)';
+                        $_join .= ' INNER JOIN ' . _DB_PREFIX_ . 'orders ON (' . $_primary_table . '.id_customer = ' . _DB_PREFIX_ . 'orders' . '.id_customer)';
                     }
-                    $_join .= ' INNER JOIN '._DB_PREFIX_.'order_detail ON ('._DB_PREFIX_.'orders.id_order = '._DB_PREFIX_.'order_detail'.'.id_order)';
+                    $_join .= ' INNER JOIN ' . _DB_PREFIX_ . 'order_detail ON (' . _DB_PREFIX_ . 'orders.id_order = ' . _DB_PREFIX_ . 'order_detail' . '.id_order)';
                 }
                 if (in_array('address', $_tables)) {
-                    $_join .= ' INNER JOIN '._DB_PREFIX_.'address ON ('.$_primary_table.'.id_customer = '._DB_PREFIX_.'address'.'.id_customer)';
-                    $_join .= ' INNER JOIN `'._DB_PREFIX_.'country` ON ('._DB_PREFIX_.'address.id_country = '._DB_PREFIX_.'country.id_country)';
-                    $_join .= ' INNER JOIN `'._DB_PREFIX_.'country_lang` ON ('._DB_PREFIX_.'country.id_country = '._DB_PREFIX_.'country_lang.id_country AND '._DB_PREFIX_.'country_lang.id_lang = '.$context->language->id.')';
+                    $_join .= ' INNER JOIN ' . _DB_PREFIX_ . 'address ON (' . $_primary_table . '.id_customer = ' . _DB_PREFIX_ . 'address' . '.id_customer)';
+                    $_join .= ' INNER JOIN `' . _DB_PREFIX_ . 'country` ON (' . _DB_PREFIX_ . 'address.id_country = ' . _DB_PREFIX_ . 'country.id_country)';
+                    $_join .= ' INNER JOIN `' . _DB_PREFIX_ . 'country_lang` ON (' . _DB_PREFIX_ . 'country.id_country = ' . _DB_PREFIX_ . 'country_lang.id_country AND ' . _DB_PREFIX_ . 'country_lang.id_lang = ' . $context->language->id . ')';
                     $_join_address = true;
                 }
             }
         }
         //Shop join
-        if ($_primary_table == _DB_PREFIX_.'product') {
-            $_join .= ' INNER JOIN `'._DB_PREFIX_.'shop` ON ('.$_primary_table.'.id_shop_default = `'._DB_PREFIX_.'shop`.id_shop AND '.$_primary_table.'.id_shop_default = '.$report->id_shop.')';
+        if ($_primary_table == _DB_PREFIX_ . 'product') {
+            $_join .= ' INNER JOIN `' . _DB_PREFIX_ . 'shop` ON (' . $_primary_table . '.id_shop_default = `' . _DB_PREFIX_ . 'shop`.id_shop AND ' . $_primary_table . '.id_shop_default = ' . $report->id_shop . ')';
         } else {
-            $_join .= ' INNER JOIN `'._DB_PREFIX_.'shop` ON ('.$_primary_table.'.id_shop = `'._DB_PREFIX_.'shop`.id_shop AND '.$_primary_table.'.id_shop = '.$report->id_shop.')';
+            $_join .= ' INNER JOIN `' . _DB_PREFIX_ . 'shop` ON (' . $_primary_table . '.id_shop = `' . _DB_PREFIX_ . 'shop`.id_shop AND ' . $_primary_table . '.id_shop = ' . $report->id_shop . ')';
         }
         //Carrier join
         if ($_join_carrier) {
-            $_join .= ' INNER JOIN `'._DB_PREFIX_.'carrier` ON (`'._DB_PREFIX_.'orders`.id_carrier = `'._DB_PREFIX_.'carrier`.id_carrier)';
+            $_join .= ' INNER JOIN `' . _DB_PREFIX_ . 'carrier` ON (`' . _DB_PREFIX_ . 'orders`.id_carrier = `' . _DB_PREFIX_ . 'carrier`.id_carrier)';
         }
         //State join
         if ($_join_state) {
-            $_join .= ' LEFT JOIN `'._DB_PREFIX_.'state` ON (`'._DB_PREFIX_.'address`.id_state = `'._DB_PREFIX_.'state`.id_state)';
+            $_join .= ' LEFT JOIN `' . _DB_PREFIX_ . 'state` ON (`' . _DB_PREFIX_ . 'address`.id_state = `' . _DB_PREFIX_ . 'state`.id_state)';
         }
         //Product name join
         if ($_join_productname) {
             if (!in_array('product', $_tables)) {
-                $_join .= ' INNER JOIN '._DB_PREFIX_.'product ON ('._DB_PREFIX_.'order_detail'.'.product_id = '._DB_PREFIX_.'product'.'.id_product)';
+                $_join .= ' INNER JOIN ' . _DB_PREFIX_ . 'product ON (' . _DB_PREFIX_ . 'order_detail' . '.product_id = ' . _DB_PREFIX_ . 'product' . '.id_product)';
             }
-            $_select = str_replace(_DB_PREFIX_.'product.product_name', _DB_PREFIX_.'product_lang.name', $_select);
-            $_select = str_replace(_DB_PREFIX_.'product.name', _DB_PREFIX_.'product_lang.name', $_select);
-            $_join .= ' INNER JOIN `'._DB_PREFIX_.'product_lang` ON (`'._DB_PREFIX_.'product`.id_product = `'._DB_PREFIX_.'product_lang`.id_product AND '._DB_PREFIX_.'product_lang.id_lang = '.$context->language->id.')';
+            $_select = str_replace(_DB_PREFIX_ . 'product.product_name', _DB_PREFIX_ . 'product_lang.name', $_select);
+            $_select = str_replace(_DB_PREFIX_ . 'product.name', _DB_PREFIX_ . 'product_lang.name', $_select);
+            $_join .= ' INNER JOIN `' . _DB_PREFIX_ . 'product_lang` ON (`' . _DB_PREFIX_ . 'product`.id_product = `' . _DB_PREFIX_ . 'product_lang`.id_product AND ' . _DB_PREFIX_ . 'product_lang.id_lang = ' . $context->language->id . ')';
         }
         //Product description join
         if ($_join_productdescription) {
             if (!in_array('product', $_tables)) {
-                $_join .= ' INNER JOIN '._DB_PREFIX_.'product ON ('._DB_PREFIX_.'order_detail'.'.product_id = '._DB_PREFIX_.'product'.'.id_product)';
+                $_join .= ' INNER JOIN ' . _DB_PREFIX_ . 'product ON (' . _DB_PREFIX_ . 'order_detail' . '.product_id = ' . _DB_PREFIX_ . 'product' . '.id_product)';
             }
-            $_select = str_replace(_DB_PREFIX_.'product.product_description', _DB_PREFIX_.'product_lang.description', $_select);
-            $_select = str_replace(_DB_PREFIX_.'product.description', _DB_PREFIX_.'product_lang.description', $_select);
+            $_select = str_replace(_DB_PREFIX_ . 'product.product_description', _DB_PREFIX_ . 'product_lang.description', $_select);
+            $_select = str_replace(_DB_PREFIX_ . 'product.description', _DB_PREFIX_ . 'product_lang.description', $_select);
             if (!$_join_productname) {
-                $_join .= ' INNER JOIN `'._DB_PREFIX_.'product_lang` ON (`'._DB_PREFIX_.'product`.id_product = `'._DB_PREFIX_.'product_lang`.id_product AND '._DB_PREFIX_.'product_lang.id_lang = '.$context->language->id.')';
+                $_join .= ' INNER JOIN `' . _DB_PREFIX_ . 'product_lang` ON (`' . _DB_PREFIX_ . 'product`.id_product = `' . _DB_PREFIX_ . 'product_lang`.id_product AND ' . _DB_PREFIX_ . 'product_lang.id_lang = ' . $context->language->id . ')';
             }
         }
         //Product short description join
         if ($_join_productdescriptionshort) {
             if (!in_array('product', $_tables)) {
-                $_join .= ' INNER JOIN '._DB_PREFIX_.'product ON ('._DB_PREFIX_.'order_detail'.'.product_id = '._DB_PREFIX_.'product'.'.id_product)';
+                $_join .= ' INNER JOIN ' . _DB_PREFIX_ . 'product ON (' . _DB_PREFIX_ . 'order_detail' . '.product_id = ' . _DB_PREFIX_ . 'product' . '.id_product)';
             }
-            $_select = str_replace(_DB_PREFIX_.'product.product_description_short', _DB_PREFIX_.'product_lang.description_short', $_select);
-            $_select = str_replace(_DB_PREFIX_.'product.description_short', _DB_PREFIX_.'product_lang.description_short', $_select);
+            $_select = str_replace(_DB_PREFIX_ . 'product.product_description_short', _DB_PREFIX_ . 'product_lang.description_short', $_select);
+            $_select = str_replace(_DB_PREFIX_ . 'product.description_short', _DB_PREFIX_ . 'product_lang.description_short', $_select);
             if (!$_join_productname) {
-                $_join .= ' INNER JOIN `'._DB_PREFIX_.'product_lang` ON (`'._DB_PREFIX_.'product`.id_product = `'._DB_PREFIX_.'product_lang`.id_product AND '._DB_PREFIX_.'product_lang.id_lang = '.$context->language->id.')';
+                $_join .= ' INNER JOIN `' . _DB_PREFIX_ . 'product_lang` ON (`' . _DB_PREFIX_ . 'product`.id_product = `' . _DB_PREFIX_ . 'product_lang`.id_product AND ' . _DB_PREFIX_ . 'product_lang.id_lang = ' . $context->language->id . ')';
             }
         }
         //Customer group join
         if ($_join_customergroup) {
-            $_select = str_replace(_DB_PREFIX_.'customer.customer_group', _DB_PREFIX_.'group_lang.name', $_select);
-            $_join .= ' INNER JOIN `'._DB_PREFIX_.'group_lang` ON (`'._DB_PREFIX_.'customer`.id_default_group = `'._DB_PREFIX_.'group_lang`.id_group AND '._DB_PREFIX_.'group_lang.id_lang = '.$context->language->id.')';
+            $_select = str_replace(_DB_PREFIX_ . 'customer.customer_group', _DB_PREFIX_ . 'group_lang.name', $_select);
+            $_join .= ' INNER JOIN `' . _DB_PREFIX_ . 'group_lang` ON (`' . _DB_PREFIX_ . 'customer`.id_default_group = `' . _DB_PREFIX_ . 'group_lang`.id_group AND ' . _DB_PREFIX_ . 'group_lang.id_lang = ' . $context->language->id . ')';
         }
         //Order state join
         if ($_join_orderstate) {
-            $_select = str_replace(_DB_PREFIX_.'orders.order_state', _DB_PREFIX_.'order_state_lang.name', $_select);
-            $_join .= ' INNER JOIN `'._DB_PREFIX_.'order_state_lang` ON (`'._DB_PREFIX_.'orders`.current_state = `'._DB_PREFIX_.'order_state_lang`.id_order_state AND '._DB_PREFIX_.'order_state_lang.id_lang = '.$context->language->id.')';
+            $_select = str_replace(_DB_PREFIX_ . 'orders.order_state', _DB_PREFIX_ . 'order_state_lang.name', $_select);
+            $_join .= ' INNER JOIN `' . _DB_PREFIX_ . 'order_state_lang` ON (`' . _DB_PREFIX_ . 'orders`.current_state = `' . _DB_PREFIX_ . 'order_state_lang`.id_order_state AND ' . _DB_PREFIX_ . 'order_state_lang.id_lang = ' . $context->language->id . ')';
         }
         //Address delivery join
         if ($_join_address_delivery || $_join_address_delivery_separate) {
-            $_select = str_replace(_DB_PREFIX_.'orders.address_delivery', 'CONCAT('._DB_PREFIX_.'address.company, " ",'._DB_PREFIX_.'address.address1, " ", '._DB_PREFIX_.'address.address2, " ", '._DB_PREFIX_.'address.postcode, " ", '._DB_PREFIX_.'address.city, " ", '._DB_PREFIX_.'address.other, " ", IFNULL('._DB_PREFIX_.'state.name, ""), " ", '._DB_PREFIX_.'country_lang.name, " ", '._DB_PREFIX_.'address.phone)', $_select);
+            $_select = str_replace(_DB_PREFIX_ . 'orders.address_delivery', 'CONCAT(' . _DB_PREFIX_ . 'address.company, " ",' . _DB_PREFIX_ . 'address.address1, " ", ' . _DB_PREFIX_ . 'address.address2, " ", ' . _DB_PREFIX_ . 'address.postcode, " ", ' . _DB_PREFIX_ . 'address.city, " ", ' . _DB_PREFIX_ . 'address.other, " ", IFNULL(' . _DB_PREFIX_ . 'state.name, ""), " ", ' . _DB_PREFIX_ . 'country_lang.name, " ", ' . _DB_PREFIX_ . 'address.phone)', $_select);
             if (!in_array('address', $_tables) || !in_array('address_delivery', $_tables)) {
-                $_join .= ' INNER JOIN `'._DB_PREFIX_.'address` ON (`'._DB_PREFIX_.'orders`.id_address_delivery = `'._DB_PREFIX_.'address`.id_address)';
-                $_join .= ' INNER JOIN `'._DB_PREFIX_.'country` ON (`'._DB_PREFIX_.'address`.id_country = `'._DB_PREFIX_.'country`.id_country)';
-                $_join .= ' INNER JOIN `'._DB_PREFIX_.'country_lang` ON (`'._DB_PREFIX_.'country_lang`.id_country = `'._DB_PREFIX_.'country`.id_country AND '._DB_PREFIX_.'country_lang.id_lang = '.$context->language->id.')';
+                $_join .= ' INNER JOIN `' . _DB_PREFIX_ . 'address` ON (`' . _DB_PREFIX_ . 'orders`.id_address_delivery = `' . _DB_PREFIX_ . 'address`.id_address)';
+                $_join .= ' INNER JOIN `' . _DB_PREFIX_ . 'country` ON (`' . _DB_PREFIX_ . 'address`.id_country = `' . _DB_PREFIX_ . 'country`.id_country)';
+                $_join .= ' INNER JOIN `' . _DB_PREFIX_ . 'country_lang` ON (`' . _DB_PREFIX_ . 'country_lang`.id_country = `' . _DB_PREFIX_ . 'country`.id_country AND ' . _DB_PREFIX_ . 'country_lang.id_lang = ' . $context->language->id . ')';
                 $_join_address = true;
             }
-            $_join .= ' LEFT JOIN `'._DB_PREFIX_.'state` ON (`'._DB_PREFIX_.'address`.id_state = `'._DB_PREFIX_.'state`.id_state)';
+            $_join .= ' LEFT JOIN `' . _DB_PREFIX_ . 'state` ON (`' . _DB_PREFIX_ . 'address`.id_state = `' . _DB_PREFIX_ . 'state`.id_state)';
         }
         //Address invoice join
         if ($_join_address_invoice || $_join_address_invoice_separate) {
-            $_select = str_replace(_DB_PREFIX_.'orders.address_invoice', 'CONCAT('._DB_PREFIX_.'address.company, " ",'._DB_PREFIX_.'address.address1, " ", '._DB_PREFIX_.'address.address2, " ", '._DB_PREFIX_.'address.postcode, " ", '._DB_PREFIX_.'address.city, " ", '._DB_PREFIX_.'address.other, " ", IFNULL('._DB_PREFIX_.'state.name, ""), " ", '._DB_PREFIX_.'country_lang.name, " ", '._DB_PREFIX_.'address.phone)', $_select);
+            $_select = str_replace(_DB_PREFIX_ . 'orders.address_invoice', 'CONCAT(' . _DB_PREFIX_ . 'address.company, " ",' . _DB_PREFIX_ . 'address.address1, " ", ' . _DB_PREFIX_ . 'address.address2, " ", ' . _DB_PREFIX_ . 'address.postcode, " ", ' . _DB_PREFIX_ . 'address.city, " ", ' . _DB_PREFIX_ . 'address.other, " ", IFNULL(' . _DB_PREFIX_ . 'state.name, ""), " ", ' . _DB_PREFIX_ . 'country_lang.name, " ", ' . _DB_PREFIX_ . 'address.phone)', $_select);
             if (!$_join_address_delivery && !$_join_address_delivery_separate) {
-                $_join .= ' INNER JOIN `'._DB_PREFIX_.'address` ON (`'._DB_PREFIX_.'orders`.id_address_invoice = `'._DB_PREFIX_.'address`.id_address)';
-                $_join .= ' INNER JOIN `'._DB_PREFIX_.'country` ON (`'._DB_PREFIX_.'address`.id_country = `'._DB_PREFIX_.'country`.id_country)';
-                $_join .= ' INNER JOIN `'._DB_PREFIX_.'country_lang` ON (`'._DB_PREFIX_.'country_lang`.id_country = `'._DB_PREFIX_.'country`.id_country AND '._DB_PREFIX_.'country_lang.id_lang = '.$context->language->id.')';
-                $_join .= ' LEFT JOIN `'._DB_PREFIX_.'state` ON (`'._DB_PREFIX_.'address`.id_state = `'._DB_PREFIX_.'state`.id_state)';
+                $_join .= ' INNER JOIN `' . _DB_PREFIX_ . 'address` ON (`' . _DB_PREFIX_ . 'orders`.id_address_invoice = `' . _DB_PREFIX_ . 'address`.id_address)';
+                $_join .= ' INNER JOIN `' . _DB_PREFIX_ . 'country` ON (`' . _DB_PREFIX_ . 'address`.id_country = `' . _DB_PREFIX_ . 'country`.id_country)';
+                $_join .= ' INNER JOIN `' . _DB_PREFIX_ . 'country_lang` ON (`' . _DB_PREFIX_ . 'country_lang`.id_country = `' . _DB_PREFIX_ . 'country`.id_country AND ' . _DB_PREFIX_ . 'country_lang.id_lang = ' . $context->language->id . ')';
+                $_join .= ' LEFT JOIN `' . _DB_PREFIX_ . 'state` ON (`' . _DB_PREFIX_ . 'address`.id_state = `' . _DB_PREFIX_ . 'state`.id_state)';
                 $_join_address = true;
             }
         }
@@ -841,145 +952,145 @@ class AdvancedReportsConfiguration extends ObjectModel
         if ($_join_supplier) {
             if (!in_array('product', $_tables)) {
                 if (!$_join_productname) {
-                    $_join .= ' INNER JOIN '._DB_PREFIX_.'product ON ('._DB_PREFIX_.'order_detail'.'.product_id = '._DB_PREFIX_.'product'.'.id_product)';
+                    $_join .= ' INNER JOIN ' . _DB_PREFIX_ . 'product ON (' . _DB_PREFIX_ . 'order_detail' . '.product_id = ' . _DB_PREFIX_ . 'product' . '.id_product)';
                 }
             }
-            $_join .= ' INNER JOIN `'._DB_PREFIX_.'supplier` ON (`'._DB_PREFIX_.'product`.id_supplier = `'._DB_PREFIX_.'supplier`.id_supplier)';
+            $_join .= ' INNER JOIN `' . _DB_PREFIX_ . 'supplier` ON (`' . _DB_PREFIX_ . 'product`.id_supplier = `' . _DB_PREFIX_ . 'supplier`.id_supplier)';
         }
         //Manufacturer join
         if ($_join_manufacturer) {
             if (!in_array('product', $_tables)) {
                 if (!$_join_productname) {
-                    $_join .= ' INNER JOIN '._DB_PREFIX_.'product ON ('._DB_PREFIX_.'order_detail'.'.product_id = '._DB_PREFIX_.'product'.'.id_product)';
+                    $_join .= ' INNER JOIN ' . _DB_PREFIX_ . 'product ON (' . _DB_PREFIX_ . 'order_detail' . '.product_id = ' . _DB_PREFIX_ . 'product' . '.id_product)';
                 }
             }
-            $_join .= ' INNER JOIN `'._DB_PREFIX_.'manufacturer` ON (`'._DB_PREFIX_.'product`.id_manufacturer = `'._DB_PREFIX_.'manufacturer`.id_manufacturer)';
+            $_join .= ' INNER JOIN `' . _DB_PREFIX_ . 'manufacturer` ON (`' . _DB_PREFIX_ . 'product`.id_manufacturer = `' . _DB_PREFIX_ . 'manufacturer`.id_manufacturer)';
         }
         //Currency join
         if ($_join_currency) {
-            $_select = str_replace(_DB_PREFIX_.'orders.currency', _DB_PREFIX_.'currency.iso_code', $_select);
-            $_join .= ' INNER JOIN `'._DB_PREFIX_.'currency` ON (`'._DB_PREFIX_.'orders`.id_currency = `'._DB_PREFIX_.'currency`.id_currency)';
+            $_select = str_replace(_DB_PREFIX_ . 'orders.currency', _DB_PREFIX_ . 'currency.iso_code', $_select);
+            $_join .= ' INNER JOIN `' . _DB_PREFIX_ . 'currency` ON (`' . _DB_PREFIX_ . 'orders`.id_currency = `' . _DB_PREFIX_ . 'currency`.id_currency)';
         }
         //WHERE
         $_where = ' WHERE 1=1 ';
         if ($report->countries != '' && $report->countries != 'all') {
             $_join_country = true;
-            $_where .= ' AND `'._DB_PREFIX_.'address`.id_country IN ('.$report->countries.')';
+            $_where .= ' AND `' . _DB_PREFIX_ . 'address`.id_country IN (' . $report->countries . ')';
         }
         if ($report->zones != '' && $report->zones != 'all') {
             $_join_zone = true;
-            $_where .= ' AND `'._DB_PREFIX_.'country`.id_zone IN('.$report->zones.')';
+            $_where .= ' AND `' . _DB_PREFIX_ . 'country`.id_zone IN(' . $report->zones . ')';
         }
         if ($report->payments != '' && $report->payments != 'all' && in_array('orders', $_alltables)) {
             $_payments = explode(',', $report->payments);
             $_strPayments = '';
             foreach ($_payments as $key => $_payment) {
-                $_strPayments .= '"'.$_payment.'",';
+                $_strPayments .= '"' . $_payment . '",';
             }
-            $_where .= ' AND `'._DB_PREFIX_.'orders`.module IN ('.rtrim($_strPayments, ',').')';
+            $_where .= ' AND `' . _DB_PREFIX_ . 'orders`.module IN (' . rtrim($_strPayments, ',') . ')';
         }
         if ($report->statuses != '' && $report->statuses != 'all' && in_array('orders', $_alltables)) {
-            $_where .= ' AND `'._DB_PREFIX_.'orders`.current_state IN ('.$report->statuses.')';
+            $_where .= ' AND `' . _DB_PREFIX_ . 'orders`.current_state IN (' . $report->statuses . ')';
         }
         if ($report->groups != '' && $report->groups != 'all') {
-            $_where .= ' AND `'._DB_PREFIX_.'customer`.id_default_group IN ('.$report->groups.')';
+            $_where .= ' AND `' . _DB_PREFIX_ . 'customer`.id_default_group IN (' . $report->groups . ')';
             if (!$_join_customergroup) {
-                $_join .= ' INNER JOIN `'._DB_PREFIX_.'customer` ON (`'._DB_PREFIX_.'customer`.id_customer = `'._DB_PREFIX_.'orders`.id_customer)';
+                $_join .= ' INNER JOIN `' . _DB_PREFIX_ . 'customer` ON (`' . _DB_PREFIX_ . 'customer`.id_customer = `' . _DB_PREFIX_ . 'orders`.id_customer)';
             }
         }
         if ($report->manufacturers != '' && $report->manufacturers != 'all') {
-            $_where .= ' AND '.$_primary_table.'.id_manufacturer IN ('.$report->manufacturers.')';
+            $_where .= ' AND ' . $_primary_table . '.id_manufacturer IN (' . $report->manufacturers . ')';
         }
         if ($report->suppliers != '' && $report->suppliers != 'all') {
-            $_where .= ' AND '.$_primary_table.'.id_supplier IN ('.$report->suppliers.')';
+            $_where .= ' AND ' . $_primary_table . '.id_supplier IN (' . $report->suppliers . ')';
         }
         if ($report->categories != '' && $report->categories != 'all') {
-            $_where .= ' AND id_category_default IN ('.$report->categories.')';
+            $_where .= ' AND id_category_default IN (' . $report->categories . ')';
         }
         if ((int)$report->data_from > 10) {
             if ($report->date_from != '0000-00-00 00:00:00') {
-                $_where .= ' AND '.$_primary_table.'.date_add >= "'.$report->date_from.'"';
+                $_where .= ' AND ' . $_primary_table . '.date_add >= "' . $report->date_from . '"';
             }
             if ($report->date_to != '0000-00-00 00:00:00') {
-                $_where .= ' AND '.$_primary_table.'.date_add <= "'.$report->date_to.'"';
+                $_where .= ' AND ' . $_primary_table . '.date_add <= "' . $report->date_to . '"';
             }
         } else {
-            $last_quarter= $this->get_quarter(1);
-            $current_quarter= $this->get_quarter(0);
+            $last_quarter = $this->get_quarter(1);
+            $current_quarter = $this->get_quarter(0);
             switch ($report->data_from) {
                 case '0':
-                    $_where .= ' AND '.$_primary_table.'.date_add >= "'.date('Y-m-d').'"';
+                    $_where .= ' AND ' . $_primary_table . '.date_add >= "' . date('Y-m-d') . '"';
                     break;
                 case '1':
-                    $_where .= ' AND '.$_primary_table.'.date_add >= "'.date('Y-m-d', strtotime(date('Y-m-d').' -1 day')).'"';
-                    $_where .= ' AND '.$_primary_table.'.date_add <= "'.date('Y-m-d').'"';
+                    $_where .= ' AND ' . $_primary_table . '.date_add >= "' . date('Y-m-d', strtotime(date('Y-m-d') . ' -1 day')) . '"';
+                    $_where .= ' AND ' . $_primary_table . '.date_add <= "' . date('Y-m-d') . '"';
                     break;
                 case '2':
-                    $_where .= ' AND '.$_primary_table.'.date_add >= "'.date('Y-m-d', strtotime('previous monday')).'"';
-                    $_where .= ' AND '.$_primary_table.'.date_add <= "'.date('Y-m-d', strtotime('today'. ' +1 day')).'"';
+                    $_where .= ' AND ' . $_primary_table . '.date_add >= "' . date('Y-m-d', strtotime('previous monday')) . '"';
+                    $_where .= ' AND ' . $_primary_table . '.date_add <= "' . date('Y-m-d', strtotime('today' . ' +1 day')) . '"';
                     break;
                 case '3':
-                    $_where .= ' AND '.$_primary_table.'.date_add >= "'.date('Y-m-d', strtotime('previous monday'. ' -7 days')).'"';
-                    $_where .= ' AND '.$_primary_table.'.date_add <= "'.date('Y-m-d', strtotime('previous monday')).'"';
+                    $_where .= ' AND ' . $_primary_table . '.date_add >= "' . date('Y-m-d', strtotime('previous monday' . ' -7 days')) . '"';
+                    $_where .= ' AND ' . $_primary_table . '.date_add <= "' . date('Y-m-d', strtotime('previous monday')) . '"';
                     break;
                 case '4':
-                    $_where .= ' AND MONTH('.$_primary_table.'.date_add) = '.date('m').' AND YEAR('.$_primary_table.'.date_add) = '.date('Y');
+                    $_where .= ' AND MONTH(' . $_primary_table . '.date_add) = ' . date('m') . ' AND YEAR(' . $_primary_table . '.date_add) = ' . date('Y');
                     break;
                 case '5':
-                    $_where .= ' AND MONTH('.$_primary_table.'.date_add) = '.date('m', strtotime('-1 month')).' AND YEAR('.$_primary_table.'.date_add) = '.date('Y');
+                    $_where .= ' AND MONTH(' . $_primary_table . '.date_add) = ' . date('m', strtotime('-1 month')) . ' AND YEAR(' . $_primary_table . '.date_add) = ' . date('Y');
                     break;
                 case '6':
-                    $_where .= ' AND '.$_primary_table.'.date_add >= "'.$current_quarter['start'].'"';
+                    $_where .= ' AND ' . $_primary_table . '.date_add >= "' . $current_quarter['start'] . '"';
                     break;
                 case '7':
-                    $_where .= ' AND '.$_primary_table.'.date_add >= "'.$last_quarter['start'].'"';
-                    $_where .= ' AND '.$_primary_table.'.date_add <= "'.$last_quarter['end'].'"';
+                    $_where .= ' AND ' . $_primary_table . '.date_add >= "' . $last_quarter['start'] . '"';
+                    $_where .= ' AND ' . $_primary_table . '.date_add <= "' . $last_quarter['end'] . '"';
                     break;
                 case '8':
-                    $_where .= ' AND YEAR('.$_primary_table.'.date_add) = '.date('Y');
+                    $_where .= ' AND YEAR(' . $_primary_table . '.date_add) = ' . date('Y');
                     break;
                 case '9':
-                    $_where .= ' AND YEAR('.$_primary_table.'.date_add) = '.date('Y', strtotime('-1 year'));
+                    $_where .= ' AND YEAR(' . $_primary_table . '.date_add) = ' . date('Y', strtotime('-1 year'));
                     break;
                 default:
                     break;
             }
         }
         if ($_join_productname || $_join_productdescription || $_join_productdescriptionshort) {
-            $_where .= ' AND '._DB_PREFIX_.'product_lang.id_shop = '.$report->id_shop;
+            $_where .= ' AND ' . _DB_PREFIX_ . 'product_lang.id_shop = ' . $report->id_shop;
         }
         //Country / Zone join
         if (($_join_country || $_join_zone) && !$_join_address_invoice && !$_join_address_delivery && !$_join_address) {
-            $_join .= ' INNER JOIN `'._DB_PREFIX_.'address` ON (`'._DB_PREFIX_.'address`.id_address = `'._DB_PREFIX_.'orders`.id_address_invoice)';
-            $_join .= ' INNER JOIN `'._DB_PREFIX_.'country` ON (`'._DB_PREFIX_.'address`.id_country = `'._DB_PREFIX_.'country`.id_country)';
+            $_join .= ' INNER JOIN `' . _DB_PREFIX_ . 'address` ON (`' . _DB_PREFIX_ . 'address`.id_address = `' . _DB_PREFIX_ . 'orders`.id_address_invoice)';
+            $_join .= ' INNER JOIN `' . _DB_PREFIX_ . 'country` ON (`' . _DB_PREFIX_ . 'address`.id_country = `' . _DB_PREFIX_ . 'country`.id_country)';
         }
         //GROUPS BY
         if (count($_groupby) > 0) {
-            $_groupby = ' GROUP BY '.implode(',', $_groupby);
+            $_groupby = ' GROUP BY ' . implode(',', $_groupby);
         } else {
             $_groupby = '';
         }
         //ORDER BY
         if (count($_orderby) > 0) {
-            $_orderby = ' ORDER BY '.implode(',', $_orderby);
+            $_orderby = ' ORDER BY ' . implode(',', $_orderby);
         } else {
             $_orderby = '';
         }
-        $_orderby = str_replace(_DB_PREFIX_.'product.product_name', _DB_PREFIX_.'product_lang.name', $_orderby);
-        $_orderby = str_replace(_DB_PREFIX_.'product.product_description', _DB_PREFIX_.'product_lang.description', $_orderby);
-        $_orderby = str_replace(_DB_PREFIX_.'product.product_description_short', _DB_PREFIX_.'product_lang.description_short', $_orderby);
-        $_orderby = str_replace(_DB_PREFIX_.'product.name', _DB_PREFIX_.'product_lang.name', $_orderby);
-        $_orderby = str_replace(_DB_PREFIX_.'product.description', _DB_PREFIX_.'product_lang.description', $_orderby);
-        $_orderby = str_replace(_DB_PREFIX_.'product.description_short', _DB_PREFIX_.'product_lang.description_short', $_orderby);
-        $_orderby = str_replace(_DB_PREFIX_.'customer.customer_group', _DB_PREFIX_.'group_lang.name', $_orderby);
+        $_orderby = str_replace(_DB_PREFIX_ . 'product.product_name', _DB_PREFIX_ . 'product_lang.name', $_orderby);
+        $_orderby = str_replace(_DB_PREFIX_ . 'product.product_description', _DB_PREFIX_ . 'product_lang.description', $_orderby);
+        $_orderby = str_replace(_DB_PREFIX_ . 'product.product_description_short', _DB_PREFIX_ . 'product_lang.description_short', $_orderby);
+        $_orderby = str_replace(_DB_PREFIX_ . 'product.name', _DB_PREFIX_ . 'product_lang.name', $_orderby);
+        $_orderby = str_replace(_DB_PREFIX_ . 'product.description', _DB_PREFIX_ . 'product_lang.description', $_orderby);
+        $_orderby = str_replace(_DB_PREFIX_ . 'product.description_short', _DB_PREFIX_ . 'product_lang.description_short', $_orderby);
+        $_orderby = str_replace(_DB_PREFIX_ . 'customer.customer_group', _DB_PREFIX_ . 'group_lang.name', $_orderby);
         //UNION??
         if ($_sum) {
-            $_sql = '('.$_select.$_from.$_join.$_where.$_groupby.$_orderby.')';
-            $_sql_sum = $_select_sum.$_from.$_join.$_where.$_groupby.$_orderby;
+            $_sql = '(' . $_select . $_from . $_join . $_where . $_groupby . $_orderby . ')';
+            $_sql_sum = $_select_sum . $_from . $_join . $_where . $_groupby . $_orderby;
             $_sql .= ' UNION ALL ';
-            $_sql .= '('.$_sql_sum.')';
+            $_sql .= '(' . $_sql_sum . ')';
         } else {
-            $_sql = $_select.$_from.$_join.$_where.$_groupby.$_orderby;
+            $_sql = $_select . $_from . $_join . $_where . $_groupby . $_orderby;
         }
         return $_sql;
     }
@@ -996,7 +1107,7 @@ class AdvancedReportsConfiguration extends ObjectModel
                     $y--;
                 }
                 $diff = $m % 3;
-                $m = ($diff > 0) ? $m - $diff:$m-3;
+                $m = ($diff > 0) ? $m - $diff : $m - 3;
                 if ($m == 0) {
                     $m = 12;
                 }
@@ -1004,20 +1115,20 @@ class AdvancedReportsConfiguration extends ObjectModel
         }
         switch ($m) {
             case $m >= 1 && $m <= 3:
-                $start = $y.'-01-01 00:00:01';
-                $end = $y.'-03-31 00:00:00';
+                $start = $y . '-01-01 00:00:01';
+                $end = $y . '-03-31 00:00:00';
                 break;
             case $m >= 4 && $m <= 6:
-                $start = $y.'-04-01 00:00:01';
-                $end = $y.'-06-30 00:00:00';
+                $start = $y . '-04-01 00:00:01';
+                $end = $y . '-06-30 00:00:00';
                 break;
             case $m >= 7 && $m <= 9:
-                $start = $y.'-07-01 00:00:01';
-                $end = $y.'-09-30 00:00:00';
+                $start = $y . '-07-01 00:00:01';
+                $end = $y . '-09-30 00:00:00';
                 break;
             case $m >= 10 && $m <= 12:
-                $start = $y.'-10-01 00:00:01';
-                $end = $y.'-12-31 00:00:00';
+                $start = $y . '-10-01 00:00:01';
+                $end = $y . '-12-31 00:00:00';
                 break;
         }
         return array(

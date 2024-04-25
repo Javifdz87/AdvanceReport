@@ -28,5 +28,6 @@ if (!defined('_PS_VERSION_')) {
 
 function upgrade_module_1_4_9($module)
 {
+
     return $module;
 }
